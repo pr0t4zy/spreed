@@ -161,6 +161,16 @@ class Message {
 			\in_array($this->getActorType(), [Attendee::ACTOR_USERS, Attendee::ACTOR_GUESTS]);
 	}
 
+	/**
+	 * Specifies whether a message can be replied private to
+	 */
+	public function isPrivateReplyable(): bool {
+		return $this->getMessageType() !== 'system' &&
+			$this->getMessageType() !== 'command' &&
+			$this->getRoom()->getType() !== Room::ONE_TO_ONE_CALL &&
+			\in_array($this->getActorType(), [Attendee::ACTOR_USERS, Attendee::ACTOR_GUESTS]);
+	}
+
 	public function toArray(): array {
 		return [
 			'id' => (int) $this->getComment()->getId(),
@@ -174,6 +184,7 @@ class Message {
 			'systemMessage' => $this->getMessageType() === 'system' ? $this->getMessageRaw() : '',
 			'messageType' => $this->getMessageType(),
 			'isReplyable' => $this->isReplyable(),
+			'isPrivateReplyable' => $this->isPrivateReplyable(),
 			'referenceId' => (string) $this->getComment()->getReferenceId(),
 		];
 	}

@@ -92,8 +92,15 @@ the main body of the message as well as a quote.
 						v-if="isReplyable"
 						icon="icon-reply"
 						:close-after-click="true"
-						@click.stop="handleReply">
+						@click.stop="handleReply(token)">
 						{{ t('spreed', 'Reply') }}
+					</ActionButton>
+					<ActionButton
+						v-if="isPrivateReplyable"
+						icon="icon-user"
+						:close-after-click="true"
+						@click.stop="handlePrivateReply">
+						{{ t('spreed', 'Reply private') }}
 					</ActionButton>
 				</Actions>
 			</div>
@@ -118,6 +125,8 @@ import { EventBus } from '../../../../services/EventBus'
 import emojiRegex from 'emoji-regex'
 import { PARTICIPANT, CONVERSATION } from '../../../../constants'
 import moment from '@nextcloud/moment'
+import { createOneToOneConversation } from '../../../../services/conversationsService'
+import createTemporaryMessage from '../../../../utils/temporaryMessage'
 
 export default {
 	name: 'Message',
@@ -218,6 +227,13 @@ export default {
 		 * Specifies if the message can be replied to.
 		 */
 		isReplyable: {
+			type: Boolean,
+			required: true,
+		},
+		/**
+		 * Specifies if the message can be private replied to.
+		 */
+		isPrivateReplyable: {
 			type: Boolean,
 			required: true,
 		},
@@ -410,7 +426,7 @@ export default {
 			// again another time
 			this.$refs.message.classList.remove('highlight-animation')
 		},
-		handleReply() {
+		handleReply(t) {
 			this.$store.dispatch('addMessageToBeReplied', {
 				id: this.id,
 				actorId: this.actorId,
@@ -421,9 +437,20 @@ export default {
 				messageType: this.messageType,
 				message: this.message,
 				messageParameters: this.messageParameters,
-				token: this.token,
+				token: t,
 			})
 			EventBus.$emit('focusChatInput')
+		},
+		async handlePrivateReply() {
+			// open the 1:1 conversation
+			const response = await createOneToOneConversation(this.actorId)
+			const conversation = response.data.ocs.data
+			this.$store.dispatch('addConversation', conversation)
+			this.$router.push({ name: 'conversation', params: { token: conversation.token } }).catch(err => console.debug(`Error while pushing the new conversation's route: ${err}`))
+
+			// quoted message
+			const temporaryMessage = createTemporaryMessage(this.message, conversation.token)
+			this.$store.dispatch('addMessageToBeReplied', temporaryMessage)
 		},
 		handleDelete() {
 			this.$store.dispatch('deleteMessage', this.message)
