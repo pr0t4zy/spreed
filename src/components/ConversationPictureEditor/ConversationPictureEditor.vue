@@ -22,7 +22,8 @@
 <template>
 	<Modal
 		@close="handleDismiss">
-		<div class="conversation-picture-editor">
+		<div class="conversation-picture-editor"
+			@click.stop="">
 			<!--native file picker, hidden -->
 			<input
 				ref="conversationPictureInput"
@@ -31,8 +32,18 @@
 				class="hidden-visually"
 				@change="handleFileInput">
 			<Cropper
-				v-if="selectedPicture"
-				:img-src="selectedPicture" />
+				:src="selectedPicture"
+				:stencil-props="{
+					handlers: {},
+					movable: false,
+					scalable: false,
+					aspectRatio: 1,
+				}"
+				:resize-image="{
+					adjustStencil: false
+				}"
+				image-restriction="stencil" />
+			<div class="actions" />
 			<div class="conversation-picture-editor__actions">
 				<button @click="handleDismiss">
 					{{ t('spreed', 'Dismiss') }}
@@ -48,7 +59,7 @@
 <script>
 
 import Modal from '@nextcloud/vue/dist/Components/Modal'
-import Cropper from './Cropper/Cropper'
+import { Cropper } from 'vue-advanced-cropper'
 
 export default {
 	name: 'ConversationPictureEditor',
