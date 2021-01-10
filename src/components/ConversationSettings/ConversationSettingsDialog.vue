@@ -31,6 +31,12 @@
 			class="app-settings-section">
 			<LinkShareSettings ref="linkShareSettings" />
 		</AppSettingsSection>
+		<!-- Notifications settings -->
+		<AppSettingsSection
+			:title="t('spreed', 'Notifications')"
+			class="app-settings-section">
+			<NotificationsSettings :conversation="conversation" />
+		</AppSettingsSection>
 		<!-- TODO sepatate these 2 settings and rename the settings sections
 		all the settings in this component are conversation settings. Proposal:
 		move lock conversation in destructive actions and create a separate
@@ -49,12 +55,6 @@
 			class="app-settings-section">
 			<LobbySettings :token="token" />
 			<SipSettings v-if="canUserEnableSIP" />
-		</AppSettingsSection>
-		<!-- Notifications settings -->
-		<AppSettingsSection
-			:title="t('spreed', 'Notifications')"
-			class="app-settings-section">
-			<NotificationsSettings :conversation="conversation" />
 		</AppSettingsSection>
 		<!-- Destructive actions -->
 		<AppSettingsSection
