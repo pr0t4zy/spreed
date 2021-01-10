@@ -50,6 +50,12 @@
 			<LobbySettings :token="token" />
 			<SipSettings v-if="canUserEnableSIP" />
 		</AppSettingsSection>
+		<!-- Notifications settings -->
+		<AppSettingsSection
+			:title="t('spreed', 'Notifications')"
+			class="app-settings-section">
+			<NotificationsSettings :conversation="conversation" />
+		</AppSettingsSection>
 		<!-- Destructive actions -->
 		<AppSettingsSection
 			v-if="canLeaveConversation || canDeleteConversation"
@@ -59,7 +65,7 @@
 			:can-leave-conversation="canLeaveConversation"
 			:can-delete-conversation="canDeleteConversation">
 			<DangerZone
-				:token="token"
+				:conversation="conversation"
 				:can-leave-conversation="canLeaveConversation"
 				:can-delete-conversation="canDeleteConversation" />
 		</AppSettingsSection>
@@ -77,6 +83,7 @@ import LockingSettings from './LockingSettings'
 import LobbySettings from './LobbySettings'
 import SipSettings from './SipSettings'
 import DangerZone from './DangerZone'
+import NotificationsSettings from './NotificationsSettings'
 
 export default {
 	name: 'ConversationSettingsDialog',
@@ -90,6 +97,7 @@ export default {
 		LockingSettings,
 		SipSettings,
 		DangerZone,
+		NotificationsSettings,
 	},
 
 	data() {
