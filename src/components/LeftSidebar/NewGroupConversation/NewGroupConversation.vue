@@ -352,6 +352,14 @@ $dialog-height: 480px;
 	width: 44px;
 	padding: 0;
 	margin: 0 0 0 4px;
+	background-color: transparent;
+	border: 1px solid var(--color-primary);
+	color: var(--color-primary) !important;
+	&:hover,
+	&:focus,
+	&:active {
+		background-color: var(--color-primary-light);
+	}
 }
 
 .new-group-conversation {
