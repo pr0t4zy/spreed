@@ -88,8 +88,8 @@ Feature: chat/reply
       | group room | users     | participant2 | participant2-displayname | Message deleted by you   | {"actor":{"type":"user","id":"participant1","name":"participant1-displayname"}}                |               |
     Then user "participant2" sees the following messages in room "group room" with 200
       | room       | actorType | actorId      | actorDisplayName         | message     | messageParameters | parentMessage |
-      | group room | users     | participant1 | participant1-displayname | Message 1-1 | []                | Message deleted by author     |
-      | group room | users     | participant2 | participant2-displayname | Message deleted by author   | {"actor":{"type":"user","id":"participant1","name":"participant1-displayname"}}                |               |
+      | group room | users     | participant1 | participant1-displayname | Message 1-1 | []                | Message deleted by {actor}     |
+      | group room | users     | participant2 | participant2-displayname | Message deleted by {actor}   | {"actor":{"type":"user","id":"participant1","name":"participant1-displayname"}}                |               |
     Then user "participant1" received a system messages in room "group room" to delete "Message 1"
     Then user "participant2" received a system messages in room "group room" to delete "Message 1"
 
